@@ -294,6 +294,20 @@
     .hybrid{padding:80px 16px}
     footer{padding:40px 16px 40px}
   }
+
+  .menubtn{display:none}
+  @media (max-width:960px){
+    .menubtn{display:flex;position:absolute;top:9px;right:12px;width:44px;height:40px;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:transparent;border:1px solid rgba(255,255,255,.35);border-radius:4px;cursor:pointer;padding:0;z-index:5}
+    .menubtn span{display:block;width:22px;height:2px;background:#fff;transition:transform .25s,opacity .2s}
+    body.menu-open .menubtn span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    body.menu-open .menubtn span:nth-child(2){opacity:0}
+    body.menu-open .menubtn span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .id,body.bar .id{padding-right:56px}
+    body.menu-open aside{overflow:visible}
+    body.menu-open aside nav,body.menu-open.bar aside nav{display:flex!important;flex-direction:column;gap:0;position:absolute;left:0;right:0;top:100%;margin:0;background:#111114;padding:6px 18px 18px;border-top:1px solid #2a2a30;box-shadow:0 24px 40px rgba(0,0,0,.45);max-height:calc(100vh - 130px);overflow:auto}
+    body.menu-open aside nav a{padding:14px 2px;font-size:18px;color:#f2f2f4;border-bottom:1px solid #26262c;text-decoration:none}
+    body.menu-open aside nav a .n{color:#D895C6;margin-right:6px}
+  }
 </style>
 </head>
 <body>
@@ -305,11 +319,12 @@
 </header>
 
 <aside>
+    <button class="menubtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sitenav"><span></span><span></span><span></span></button>
   <div class="id">
     <div class="nm">H. Ryan <span class="br"></span>Kazemi<i>.</i></div>
     <div class="what">A <em>hybrid</em> oral and maxillofacial surgeon</div>
   </div>
-  <nav>
+  <nav id="sitenav">
     <a href="#work"><span class="n">01 </span>How I work</a>
     <a href="#treat"><span class="n">02 </span>What I treat</a>
     <a href="#refer"><span class="n">03 </span>Referring a patient</a>
@@ -649,6 +664,17 @@
     track.addEventListener('scroll',function(){ requestAnimationFrame(update); },{passive:true});
     window.addEventListener('resize',update); update();
   });
+})();
+</script>
+<script>
+// Phone menu: the three lines open the list of sections.
+(function(){
+  var b=document.querySelector('.menubtn'), nav=document.getElementById('sitenav'); if(!b||!nav) return;
+  function set(open){ document.body.classList.toggle('menu-open',open); b.setAttribute('aria-expanded',open); b.setAttribute('aria-label',open?'Close menu':'Open menu'); }
+  b.addEventListener('click',function(){ set(!document.body.classList.contains('menu-open')); });
+  nav.addEventListener('click',function(e){ if(e.target.closest('a')) set(false); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') set(false); });
+  document.addEventListener('click',function(e){ if(document.body.classList.contains('menu-open') && !e.target.closest('aside')) set(false); });
 })();
 </script>
 </body>
